@@ -9,6 +9,7 @@ void flushInputBuffer() {
 
 void gameLost(Player *player,int *state)
 {
+
     player->currentLocation = strdup("WORLD/CITY");
     player->gold = 0;
     player->xp = 0;
@@ -407,20 +408,20 @@ void showPlayerStats(Player *player)
 {
     printf("\n");
     printStory("Player Stats:\n",BYEL,MED);
-    printFormattedStringWithColorAndDelay("ID: %s\n", player->id,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Name: %s\n", player->name,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Level: %d\n", player->level,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Experience Points: %d\n", player->xp,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Gold: %d\n", player->gold,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Current Location: %s\n", player->currentLocation,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Health Points (HP): %d\n", player->stats->HP,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Attack (ATK): %d\n", player->stats->atk,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Defense (DEF): %d\n", player->stats->def,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Agility (AGI): %d\n", player->stats->agi,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Strength (STR): %d\n", player->stats->str,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Dexterity (DEX): %d\n", player->stats->dex,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Intelligence (INT): %d\n", player->stats->intel,BYEL,MED);
-    printFormattedStringWithColorAndDelay("Luck: %d\n", player->stats->luck,BYEL,MED);
+    printFormattedStringWithColorAndDelay("ID: %s\n",BYEL,MED, player->id);
+    printFormattedStringWithColorAndDelay("Name: %s\n", BYEL,MED,player->name);
+    printFormattedStringWithColorAndDelay("Level: %d\n",  BYEL,MED,player->level);
+    printFormattedStringWithColorAndDelay("Experience Points: %d\n", BYEL,MED, player->xp);
+    printFormattedStringWithColorAndDelay("Gold: %d\n", BYEL,MED, player->gold);
+    printFormattedStringWithColorAndDelay("Current Location: %s\n", BYEL,MED, player->currentLocation);
+    printFormattedStringWithColorAndDelay("Health Points (HP): %d\n", BYEL,MED, player->stats->HP);
+    printFormattedStringWithColorAndDelay("Attack (ATK): %d\n", BYEL,MED, player->stats->atk);
+    printFormattedStringWithColorAndDelay("Defense (DEF): %d\n", BYEL,MED, player->stats->def);
+    printFormattedStringWithColorAndDelay("Agility (AGI): %d\n", BYEL,MED, player->stats->agi);
+    printFormattedStringWithColorAndDelay("Strength (STR): %d\n", BYEL,MED, player->stats->str);
+    printFormattedStringWithColorAndDelay("Dexterity (DEX): %d\n", BYEL,MED, player->stats->dex);
+    printFormattedStringWithColorAndDelay("Intelligence (INT): %d\n", BYEL,MED, player->stats->intel);
+    printFormattedStringWithColorAndDelay("Luck: %d\n", BYEL,MED,player->stats->luck);
 }
 
 void showPlayerInventory(Player *player)
@@ -432,11 +433,11 @@ void showPlayerInventory(Player *player)
     {
         if (player->inventory->activeItems[i] == 1)
         {
-            printFormattedStringWithColorAndDelay("%s (Equipped) \n", player->inventory->items[i],BYEL,MED);
+            printFormattedStringWithColorAndDelay("%s (Equipped) \n",BYEL,MED, player->inventory->items[i]);
         }
         else
         {
-            printFormattedStringWithColorAndDelay("%s\n", player->inventory->items[i],BYEL,MED);
+            printFormattedStringWithColorAndDelay("%s\n",BYEL,MED, player->inventory->items[i]);
         }
     }
 }
@@ -558,7 +559,7 @@ Player *loadPlayerData(char *playerID)
 
     cJSON_Delete(root);
     free(fileContent);
-    printf("\nplayer data loaded successfully.");
+    // printf("\nplayer data loaded successfully.");
     return player;
 }
 
@@ -587,6 +588,9 @@ Player *gameInitializer(char *PlayerID) // This works checked
 
         player = createNewPlayer(PlayerID);
         savePlayerData(player);
+
+        showPlayerStats(player);
+        showPlayerInventory(player);
     }
     else if (input == 2)
     {
@@ -604,7 +608,7 @@ Player *gameInitializer(char *PlayerID) // This works checked
         }
         else
         {
-            printf("Old game loaded successfully\n");
+            printStory("Old game loaded successfully\n",YEL,LOW);
         }
     }
     else
@@ -620,10 +624,10 @@ Player *gameInitializer(char *PlayerID) // This works checked
 void selectState(int *state) // This works checked
 {
     char input;
-    printStory("\nEnter (n/N) to Choose  Navigation Mode",GRN,MED);
-    printStory("\nEnter (i/I) to Choose Interaction Mode",CYN,MED);
-    printStory("\nEnter (q/Q) to Choose       Quest Mode",MAG,MED);
-    printStory("\nChoose a Mode to continue your Journey : ",YEL,LOW);
+    // printStory("\nEnter (n/N) to Choose  Navigation Mode",GRN,MED);
+    // printStory("\nEnter (i/I) to Choose Interaction Mode",CYN,MED);
+    // printStory("\nEnter (q/Q) to Choose       Quest Mode",MAG,MED);
+    printStory("\nChoose a Mode to continue your Journey (n/i/q) : ",YEL,LOW);
 
     getchar();
     input=getc(stdin);
@@ -638,9 +642,10 @@ void selectState(int *state) // This works checked
     if(input=='n'||input=='N') *state=0;
     else if(input=='i'||input=='I') *state=1;
     else if(input=='q'||input=='Q') *state=2;
+    else if(input=='e'||input=='E') *state=-1;
     else    
     {
-        printStory("\n\nLooks like you have stumbled and fell into Shadow. Hope you make it through the next time",BWHT,HIG);
+        printStory("\n\nLooks like you have stumbled and fell into Shadow. Hope you make it through the next time",BMAG,HIG);
         *state=-1;
     }
 
@@ -890,7 +895,7 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
     else
     {
         printStory("\nYou walked into an dark and lonely Alley! ",BYEL,MED);
-        printStory("\nSomething or Someone zapped at you from behind. Hope you be careful next time.",BRED,MED);
+        printStory("\nSomething or Someone zapped at you from behind. Hope you be careful next time.\n",BRED,MED);
         gameLost(player,state);
         return;
     }
@@ -1544,7 +1549,7 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
     else
     {
         printStory("\nYou Have Interacted with some wrong individuals.",BYEL,MED);
-        printStory("\nYou Were Beaten to Death. Hope you be careful next time",BRED,MED);
+        printStory("\nYou Were Beaten to Death. Hope you be careful next time.\n",BRED,MED);
         gameLost(player,state);
         return;
     }
@@ -1992,7 +1997,7 @@ void questMode(Player *player, int *state)
         }
         else
         {
-            printStory("You Lost the game and DIED",BRED,HIG); // Print Game OVER STATEMENT and items lost and gold 0
+            printStory("You Lost the game and DIED\n",BRED,HIG); // Print Game OVER STATEMENT and items lost and gold 0
             gameLost(player,state);
             return;
         }
@@ -2000,7 +2005,7 @@ void questMode(Player *player, int *state)
     else
     {
         printStory("\nYou started an Unknown Dangerous Task! ",BYEL,MED);
-        printStory("\nYou met a Hoard of Barbarian and DIED. Hope you be careful next time.",BRED,MED);
+        printStory("\nYou met a Hoard of Barbarian and DIED. Hope you be careful next time.\n",BRED,MED);
         gameLost(player,state);
         // printf("%d",*state);
         return;

@@ -332,6 +332,10 @@ int playMinigame(Player *player,char *gameName);
 
 void freePlayer(Player *player);
 
+void showPlayerInventory(Player *player);
+
+void showPlayerStats(Player *player);
+
 
 //From characters.h
 
