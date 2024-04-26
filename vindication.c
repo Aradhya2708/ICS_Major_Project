@@ -125,7 +125,7 @@ int playMiniGame(Player *player, char *gameName)
 
 Player *createNewPlayer(char *playerID)
 {
-    printf("Creating new player...\n");
+    // printf("Creating new player...\n");
 
     // Allocate memory for the player struct
     Player *newPlayer = (Player *)malloc(sizeof(Player));
@@ -134,7 +134,7 @@ Player *createNewPlayer(char *playerID)
         fprintf(stderr, "Memory allocation failed for Player\n");
         exit(EXIT_FAILURE);
     }
-    printf("Allocated memory for player struct.\n");
+    // printf("Allocated memory for player struct.\n");
 
     // Initialize player ID
     newPlayer->id = strdup(playerID);
@@ -143,7 +143,7 @@ Player *createNewPlayer(char *playerID)
         fprintf(stderr, "Memory allocation failed for ID\n");
         exit(EXIT_FAILURE);
     }
-    printf("Initialized player ID: %s\n", newPlayer->id);
+    // printf("Initialized player ID: %s\n", newPlayer->id);
 
     // Initialize player name
     newPlayer->name = strdup("Gaius Marcus Agrippa");
@@ -152,7 +152,7 @@ Player *createNewPlayer(char *playerID)
         fprintf(stderr, "Memory allocation failed for name\n");
         exit(EXIT_FAILURE);
     }
-    printf("Initialized player name: %s\n", newPlayer->name);
+    // printf("Initialized player name: %s\n", newPlayer->name);
 
     // Allocate memory for player stats
     newPlayer->stats = (Stats *)malloc(sizeof(Stats));
@@ -161,7 +161,7 @@ Player *createNewPlayer(char *playerID)
         fprintf(stderr, "Memory allocation failed for stats\n");
         exit(EXIT_FAILURE);
     }
-    printf("Allocated memory for player stats.\n");
+    // printf("Allocated memory for player stats.\n");
 
     // Initialize player inventory
     newPlayer->inventory = (Inventory *)malloc(sizeof(Inventory));
@@ -170,7 +170,7 @@ Player *createNewPlayer(char *playerID)
         fprintf(stderr, "Memory allocation failed for inventory\n");
         exit(EXIT_FAILURE);
     }
-    printf("Allocated memory for player inventory.\n");
+    // printf("Allocated memory for player inventory.\n");
 
     // Allocate memory for inventory items and active items
     newPlayer->inventory->items = (char **)malloc(11*sizeof(char *));
@@ -180,7 +180,7 @@ Player *createNewPlayer(char *playerID)
         fprintf(stderr, "Memory allocation failed for inventory items or active items\n");
         exit(EXIT_FAILURE);
     }
-    printf("Allocated memory for inventory items and active items.\n");
+    // printf("Allocated memory for inventory items and active items.\n");
 
     // Initialize current location
     newPlayer->currentLocation = strdup("WORLD/CITY");
@@ -189,7 +189,7 @@ Player *createNewPlayer(char *playerID)
         fprintf(stderr, "Memory allocation failed for current location\n");
         exit(EXIT_FAILURE);
     }
-    printf("Initialized current location: %s\n", newPlayer->currentLocation);
+    // printf("Initialized current location: %s\n", newPlayer->currentLocation);
 
     // Allocate memory for active quests
     newPlayer->activeQuests = (char **)malloc(sizeof(char *));
@@ -198,7 +198,7 @@ Player *createNewPlayer(char *playerID)
         fprintf(stderr, "Memory allocation failed for active quests\n");
         exit(EXIT_FAILURE);
     }
-    printf("Allocated memory for active quests.\n");
+    // printf("Allocated memory for active quests.\n");
 
     // Get the number of NPCs
     int numOfNpcs = getNpcNumber();
@@ -219,7 +219,7 @@ Player *createNewPlayer(char *playerID)
             exit(EXIT_FAILURE);
         }
     }
-    printf("Allocated memory for NPC info.\n");
+    // printf("Allocated memory for NPC info.\n");
 
     // Initialize player properties
     newPlayer->level = 1;
@@ -233,7 +233,7 @@ Player *createNewPlayer(char *playerID)
     newPlayer->stats->dex = 9;
     newPlayer->stats->intel = 6;
     newPlayer->stats->luck = 7;
-    printf("Initialized player properties and stats.\n");
+    // printf("Initialized player properties and stats.\n");
 
     // Initialize player inventory size and items
     newPlayer->inventory->size = 10;
@@ -242,19 +242,19 @@ Player *createNewPlayer(char *playerID)
     newPlayer->inventory->activeItems[0] = 0;  // not equiped
     newPlayer->inventory->activeItems[1] = -1; // NULL
 
-    printf("Initialized player inventory.\n");
+    // printf("Initialized player inventory.\n");
 
     // Initialize other player properties
     newPlayer->wtdLevel = 0;
     newPlayer->xp = 0;
     newPlayer->gold = 50;
-    printf("Initialized other player properties.\n");
+    // printf("Initialized other player properties.\n");
 
     // Initialize active quests
     newPlayer->activeQuests[0] = NULL;
-    printf("Initialized active quests.\n");
+    // printf("Initialized active quests.\n");
 
-    printf("Player creation successful.\n");
+    // printf("Player creation successful.\n");
 
     return newPlayer;
 }
