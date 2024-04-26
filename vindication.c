@@ -403,6 +403,44 @@ void freePlayer(Player *player)
     free(player);
 }
 
+void showPlayerStats(Player *player)
+{
+    printf("\n");
+    printStory("Player Stats:\n",BYEL,MED);
+    printFormattedStringWithColorAndDelay("ID: %s\n", player->id,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Name: %s\n", player->name,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Level: %d\n", player->level,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Experience Points: %d\n", player->xp,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Gold: %d\n", player->gold,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Current Location: %s\n", player->currentLocation,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Health Points (HP): %d\n", player->stats->HP,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Attack (ATK): %d\n", player->stats->atk,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Defense (DEF): %d\n", player->stats->def,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Agility (AGI): %d\n", player->stats->agi,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Strength (STR): %d\n", player->stats->str,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Dexterity (DEX): %d\n", player->stats->dex,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Intelligence (INT): %d\n", player->stats->intel,BYEL,MED);
+    printFormattedStringWithColorAndDelay("Luck: %d\n", player->stats->luck,BYEL,MED);
+}
+
+void showPlayerInventory(Player *player)
+{
+    printf("\n");
+    printStory("Player Inventory:\n", BYEL, MED);
+
+    for (int i = 0; player->inventory->items[i] != NULL; i++)
+    {
+        if (player->inventory->activeItems[i] == 1)
+        {
+            printFormattedStringWithColorAndDelay("%s (Equipped) \n", player->inventory->items[i],BYEL,MED);
+        }
+        else
+        {
+            printFormattedStringWithColorAndDelay("%s\n", player->inventory->items[i],BYEL,MED);
+        }
+    }
+}
+
 char *createFileName( char *name) {
     // Define a constant extension
     const char *extension = ".json";
@@ -544,6 +582,9 @@ Player *gameInitializer(char *PlayerID) // This works checked
     {
         // Start a new game
         // Create a new player object and initialize its properties
+        char *story = " In the aftermath of war, Marcus Agrippa sought solace in the tranquil embrace of his farm,\n where the earth's gentle rhythm promised respite from the horrors of battle.\n But peace was fleeting, shattered by the cruel hand of fate. Returning home one fateful eve,\n Marcus found his sanctuary engulfed in flames, a grim omen of the tragedy that awaited.\n Amidst the smoldering ruins, he discovered the lifeless bodies of his beloved wife and son,\n their innocence consumed by the merciless flames of war. With nothing left to lose,\n Marcus's heart ignited with a searing thirst for vengeance.\n His once-pure hands now hardened into fists, clenched in defiance against\n the darkness that had stolen his loved ones. Guided by the flickering flames\n of retribution, Marcus embarked on a perilous journey, his path illuminated by\n the glint of steel and the echoes of his anguished cries. And it was within\n the hallowed walls of the Colosseum, where blood flowed like wine and echoes\n of cheers mingled with the moans of the fallen, that Marcus's quest for justice began.\n In the heart of the arena, amidst the clash of swords and the roar of the crowd,\n Marcus Agrippa emerged as a beacon of hope, his resolve unyielding against the tide of despair.\n And as he faced his first opponent,\n the world watched in awe as a new legend was born: the legend of Marcus Agrippa, the Avenger.\n";
+        printStory(story, BMAG,10);
+
         player = createNewPlayer(PlayerID);
         savePlayerData(player);
     }
