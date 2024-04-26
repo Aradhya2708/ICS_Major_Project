@@ -91,30 +91,40 @@ int start_hangman()
         printf("\e[1;1H\e[2J"); // To clear the terminal on Unix/Linux/Mac //Use: system("cls"); for Windows
         intro();
         char data[][500] = {
-            "You couldn't live with your own failure, and where does that get you? Back to me",
-            "The hardest choices require the strongest wills",
-            "I am deadpool",
-            "What is hate, if not love persevering",
-            "I am iron man",
-            "Whatever it takes",
-            "Just because something works, doesn't mean it can't be improved", // Marvel Quotes
-            "One small step for man, one giant leap for mankind",
-            "Be the change that you wish to see in the world",
-            "Live as if you were to die tomorrow. Learn as if you were to live forever",
-            "The future depends on what you do today",
-            "United we stand, divided we fall",
-            "I'll be back",
-            "Dream, dream, dream. Dreams transform into thoughts and thoughts result in action", // Famous quotes
-            "Avengers",
-            "Joker",
-            "Interstellar",
-            "Avatar",
-            "The dark knight", // Famous movies
-            "Introduction to computer science",
-            "Introduction to electrical engineering",
-            "Introduction to bioengineering",
-            "Engineering realization",
-            "Mathematics" // Graded sem 2 Courses
+            "Rome wasn't built in a day",
+            "All roads lead to Rome",
+            "When in Rome, do as the Romans do",
+            "Et tu, Brute?",
+            "To the victor belong the spoils",
+            "What we do in life echoes in eternity",
+            "Veni, vidi, vici",
+            "Senatus Populusque Romanus",
+            "I came, I saw, I conquered"
+            "Let him who desires peace prepare for war"
+            // "You couldn't live with your own failure, and where does that get you? Back to me",
+            // "The hardest choices require the strongest wills",
+            // "I am deadpool",
+            // "What is hate, if not love persevering",
+            // "I am iron man",
+            // "Whatever it takes",
+            // "Just because something works, doesn't mean it can't be improved", // Marvel Quotes
+            // "One small step for man, one giant leap for mankind",
+            // "Be the change that you wish to see in the world",
+            // "Live as if you were to die tomorrow. Learn as if you were to live forever",
+            // "The future depends on what you do today",
+            // "United we stand, divided we fall",
+            // "I'll be back",
+            // "Dream, dream, dream. Dreams transform into thoughts and thoughts result in action", // Famous quotes
+            // "Avengers",
+            // "Joker",
+            // "Interstellar",
+            // "Avatar",
+            // "The dark knight", // Famous movies
+            // "Introduction to computer science",
+            // "Introduction to electrical engineering",
+            // "Introduction to bioengineering",
+            // "Engineering realization",
+            // "Mathematics" // Graded sem 2 Courses
         };
         int n = 23;
         int selected_index;
@@ -125,29 +135,29 @@ int start_hangman()
 
         choice = select_choice(); // Selecting the category
         if (choice == 1)
-            selected_index = rand() % 7;
-        else if (choice == 2)
-            selected_index = rand() % 7 + 7;
-        else if (choice == 3)
-            selected_index = rand() % 5 + 14;
-        else if (choice == 4)
-            selected_index = rand() % 5 + 19;
-        else
-        {
-            printf("Wrong Choice\n");
-            return 0;
-        }
+            selected_index = rand() % 11;
+        // else if (choice == 2)
+        //     selected_index = rand() % 7 + 7;
+        // else if (choice == 3)
+        //     selected_index = rand() % 5 + 14;
+        // else if (choice == 4)
+        //     selected_index = rand() % 5 + 19;
+        // else
+        // {
+        //     printf("Wrong Choice\n");
+        //     return 0;
+        // }
 
         char selected_word[500];
         int length = strlen(data[selected_index]); // length of the selected word
         strcpy(selected_word, data[selected_index]);
 
-        int num, x = 0;
+        int num = 1, x = 0;
         char player1[500], player2[500];
 
         printf("\033[0;32m\n"); // Green colour
-        printf("Enter the number of players: ");
-        scanf("%d", &num);
+        // printf("Enter the number of players: ");
+        // scanf("%d", &num);
         printf("\033[0m\n"); // Default colour
         int life[num];       // To store the lives of all the players
 
@@ -444,12 +454,12 @@ void print_current_status(char *current_status[], int length)
 int select_choice()
 {
 
-    printf("\n\n\n\nWelcome to Danie's Hangman Game\n");
-    printf("Choose a Category to play the Game.\n1. Marvel Quotes\n2. Famous Quotes\n3. Famous Movies\n4. Graded Sem 2 Courses\n\n\n");
+    printf("\n\n\n\nWelcome to Hang the Man Game\n");
+    // printf("Choose a Category to play the Game.\n1. Marvel Quotes\n2. Famous Quotes\n3. Famous Movies\n4. Graded Sem 2 Courses\n\n\n");
     printf("\033[0;32m\n");
-    printf("Choice: ");
-    int choice;
-    scanf("%d", &choice);
+    // printf("Choice: ");
+    int choice = 1;
+    // scanf("%d", &choice);
     printf("\033[0m\n");
     printf("\n#*#*#*#*#*#*#*#*#*#*#*#*\n");
     fgetc(stdin); // To remove extra \n from the input stream which may mess with the code!!
@@ -1443,7 +1453,7 @@ void wordlegame(int n, int num, int guess)
 }
 int playWordle(int n, int attempts)
 {
-    printf("\e[1;1H\e[2J");
+    // printf("\e[1;1H\e[2J");
     printf("\n        \x1b[33m");
     char welcome[100] = "WELCOME TO THE LOCKPICKING GAME";
     for (int i = 0; i < strlen(welcome); i++)
@@ -1465,7 +1475,7 @@ int playWordle(int n, int attempts)
     printf(" __________________________________________                \x1b[33m     1 - Number is present but not at the accurate location\x1b[0m\n");
     printf("|                                                          \x1b[32m     2 - Number is present and is at the accurate location\x1b[0m\n");
     printf("|                                                          \x1b[31m     0 - Number is not present in the string \x1b[0m\n");
-    while (attempts > 0)
+    while (attempts >= 0)
     {
         // printf("\033[K");
         printf("|       Guess the 5 digit number number: ");
@@ -1863,8 +1873,8 @@ int playCombat(int plWeapon, int plStamina, int oppWeapon, int oppStamina)
 
 int Combat()
 {
-    printStory("Welcome to Combat Game\n\n",RED,UNDL,MED);
-    printStory("Enter Player Move: H(head)/B(body)/L(leg) & H/B/L for Player Attack and Defense\t",WHT,BOLD,LOW);
+    printStory("Welcome to Combat Game\n\n",URED,MED);
+    printStory("Enter Player Move: H(head)/B(body)/L(leg) & H/B/L for Player Attack and Defense\t",BWHT,LOW);
     int plWeapon = 15, plStamina = 100, oppWeapon = 10, oppStamina = 100;
     int x = playCombat(plWeapon, plStamina, oppWeapon, oppStamina);
     return x;

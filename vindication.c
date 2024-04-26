@@ -7,6 +7,18 @@ void flushInputBuffer() {
     }
 }
 
+void gameLost(Player *player,int *state)
+{
+    player->currentLocation = strdup("WORLD/CITY");
+    player->gold = 0;
+    player->xp = 0;
+    player->inventory->items[1] = NULL;
+    player->inventory->activeItems[0] = 0;
+    player->inventory->activeItems[1] = -1;
+    *state=0;
+
+}
+
 int getNpcNumber() // This works checked
 {
     FILE *file = fopen("characters.json", "r");
@@ -42,7 +54,7 @@ int getNpcNumber() // This works checked
     cJSON *root = cJSON_Parse(fileContent);
     if (root == NULL)
     {
-        printStory("Error parsing JSON data.\n",35,1,100);
+        printStory("Error parsing JSON data.\n",BMAG,HIG);
         free(fileContent);
         return -1;
     }
@@ -61,10 +73,10 @@ void delay2(int milliseconds)
         ;
 }
 
-void printStory(const char *sentence, int color, int style,int time)
+void printStory(const char *sentence, char *textStyle,int time)
 {
     // Print color code
-    printf("\033[%d;%dm", style, color);
+    printf("%s", textStyle);
 
     // Print the sentence with typing effect
     for (int i = 0; i < strlen(sentence); i++)
@@ -78,10 +90,10 @@ void printStory(const char *sentence, int color, int style,int time)
     printf("\033[0m");
 }
 
-void printFormattedStringWithColorAndDelay(const char *format, int color,int style, int delay, ...) {
+void printFormattedStringWithColorAndDelay(const char *format, char *textStyle, int delay, ...) {
     va_list args;
     va_start(args, delay);
-    printf("\033[%d;%dm", style, color);
+    printf("%s", textStyle);
     vprintf(format, args);
     printf("\033[0m");
     va_end(args);
@@ -118,8 +130,8 @@ int playMiniGame(Player *player, char *gameName)
             return functions[i].func(); // Call the function associated with the input string
         }
     }
-    printStory("No function found for input: ",WHT,BOLD,HIG);
-    printStory( gameName,WHT,BOLD,HIG);
+    printStory("No function found for input: ",BWHT,HIG);
+    printStory( gameName,BWHT,HIG);
     printf("\n");
 }
 
@@ -523,9 +535,9 @@ Player *gameInitializer(char *PlayerID) // This works checked
     int input;
     Player *player=NULL;
 
-    printStory("\nEnter (1) to Start a New Game",33,0,20);
-    printStory("\nEnter (2) Load an Old Game",33,0,20);
-    printStory("\nEnter a Choice : ",33,0,20);
+    printStory("\nEnter (1) to Start a New Game",YEL,20);
+    printStory("\nEnter (2) Load an Old Game",YEL,20);
+    printStory("\nEnter a Choice : ",YEL,20);
     scanf("%d", &input);
 
     if (input == 1)
@@ -567,10 +579,10 @@ Player *gameInitializer(char *PlayerID) // This works checked
 void selectState(int *state) // This works checked
 {
     char input;
-    printStory("\nEnter (n/N) to Choose  Navigation Mode",GRN,REGU,MED);
-    printStory("\nEnter (i/I) to Choose Interaction Mode",CYN,REGU,MED);
-    printStory("\nEnter (q/Q) to Choose       Quest Mode",MAG,REGU,MED);
-    printStory("\nChoose a Mode to continue your Journey : ",YEL,REGU,LOW);
+    printStory("\nEnter (n/N) to Choose  Navigation Mode",GRN,MED);
+    printStory("\nEnter (i/I) to Choose Interaction Mode",CYN,MED);
+    printStory("\nEnter (q/Q) to Choose       Quest Mode",MAG,MED);
+    printStory("\nChoose a Mode to continue your Journey : ",YEL,LOW);
 
     getchar();
     input=getc(stdin);
@@ -587,7 +599,7 @@ void selectState(int *state) // This works checked
     else if(input=='q'||input=='Q') *state=2;
     else    
     {
-        printStory("\n\nLooks like you have stumbled and fell into Shadow. Hope you make it through the next time",WHT,BOLD,HIG);
+        printStory("\n\nLooks like you have stumbled and fell into Shadow. Hope you make it through the next time",BWHT,HIG);
         *state=-1;
     }
 
@@ -629,7 +641,7 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
     cJSON *root = cJSON_Parse(fileContent);
     if (root == NULL)
     {
-        printStory("Error parsing JSON data.\n",WHT,BOLD,HIG);
+        printStory("Error parsing JSON data.\n",BWHT,HIG);
         free(fileContent);
         return;
     }
@@ -673,14 +685,14 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
         for (int i = 0; i < cJSON_GetArraySize(children); i++)
         {
             cJSON *child = cJSON_GetArrayItem(children, i);
-            printFormattedStringWithColorAndDelay("\nEnter (%d) to go to %s",GRN,REGU,LOW, i + 1, cJSON_GetObjectItem(child, "name")->valuestring);
+            printFormattedStringWithColorAndDelay("\nEnter (%d) to go to %s",GRN,LOW, i + 1, cJSON_GetObjectItem(child, "name")->valuestring);
         }
 
         // printStory("\nOr Enter (i/I) for Interaction Mode",);
         // printf("\nEnter (q/Q) for Quest Mode");
         // printf("\nEnter (e/E) to Exit the Game");
 
-        printStory("\nEnter your choice : ",YEL,REGU,LOW);
+        printStory("\nEnter your choice : ",YEL,LOW);
         // getchar();
         flushInputBuffer();
         input = getc(stdin);
@@ -738,12 +750,12 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
     else
     {
         // printf("\nin else");
-        printFormattedStringWithColorAndDelay("\nEnter (0) to go out of %s",GRN,REGU,LOW, token_prev);
+        printFormattedStringWithColorAndDelay("\nEnter (0) to go out of %s",GRN,LOW, token_prev);
         for (int i = 0; i < cJSON_GetArraySize(children); i++)
         {
             cJSON *child = cJSON_GetArrayItem(children, i);
             // printf("\nEnter (%d) to go to %s", (i + 1), cJSON_GetObjectItem(child, "name")->valuestring);
-            printFormattedStringWithColorAndDelay("\nEnter (%d) to go to %s",GRN,REGU,LOW, i + 1, cJSON_GetObjectItem(child, "name")->valuestring);
+            printFormattedStringWithColorAndDelay("\nEnter (%d) to go to %s",GRN,LOW, i + 1, cJSON_GetObjectItem(child, "name")->valuestring);
         }
 
         // printf("\n");
@@ -752,7 +764,7 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
         // printf("\nEnter (e/E) to Exit the Game");
 
         printf("\n");
-        printStory("\nEnter your choice : ",YEL,REGU,LOW);
+        printStory("\nEnter your choice : ",YEL,LOW);
         // getchar();
         flushInputBuffer();
 
@@ -836,9 +848,9 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
     }
     else
     {
-        printStory("\nYou walked into an dark and lonely Alley! ",YEL,BOLD,MED);
-        printStory("\nSomething or Someone zapped at you from behind. Hope you be careful next time.",RED,BOLD,MED);
-        *state=-1;
+        printStory("\nYou walked into an dark and lonely Alley! ",BYEL,MED);
+        printStory("\nSomething or Someone zapped at you from behind. Hope you be careful next time.",BRED,MED);
+        gameLost(player,state);
         return;
     }
     // printf("\n%s",player->currentLocation);
@@ -861,7 +873,7 @@ void addActiveQuest(Player *player, char *questID) // This works checked (A)
     if (newQuestID == NULL)
     {
         // Handle memory allocation error
-        printStory("Error: Memory allocation failed\n",WHT,BOLD,HIG);
+        printStory("Error: Memory allocation failed\n",BWHT,HIG);
         return;
     }
 
@@ -870,7 +882,7 @@ void addActiveQuest(Player *player, char *questID) // This works checked (A)
     if (player->activeQuests == NULL)
     {
         // Handle memory reallocation error
-        printStory("Error: Memory reallocation failed\n",WHT,BOLD,HIG);
+        printStory("Error: Memory reallocation failed\n",BWHT,HIG);
         free(newQuestID); // Free the allocated memory for the new quest ID
         return;
     }
@@ -1347,13 +1359,13 @@ void interactWith(Player *player, char *npc) // Requires Quest Submission
         NPCQuestID = getQuestID(player, npc);
         // printf("%s = Quest ID for NPC\n", NPCQuestID);
 
-        printStory("\nThe Quest has been submited and Rewards have been given to you!",YEL,BOLD,MED);
+        printStory("\nThe Quest has been submited and Rewards have been given to you!",BYEL,MED);
     }
     // char *NPCQuestID = getQuestID(player, npc);
 
     if (anyActiveQuest(player, npc) == true)
     {
-        printStory("\nYou have an active quest related to this NPC. Please complete the quest first\n",YEL,REGU,LOW);
+        printStory("\nYou have an active quest related to this NPC. Please complete the quest first\n",YEL,LOW);
     }
     else
     {
@@ -1362,7 +1374,7 @@ void interactWith(Player *player, char *npc) // Requires Quest Submission
         {
             printf("\n");
             // printf("%s",dialogues);
-            printStory(dialogues,BLU,REGU,MED); // UI MODIFICATIONS REQ IF TIME
+            printStory(dialogues,BLU,MED); // UI MODIFICATIONS REQ IF TIME
             printf("\n");
             free(dialogues);             // Free the allocated memory
         }
@@ -1371,24 +1383,24 @@ void interactWith(Player *player, char *npc) // Requires Quest Submission
         char *questDescription = getQuestDescription(NPCQuestID);
         if (questDescription != NULL)
         {
-            printStory("\nQuest description : ",CYN,UNDL,MED);
-            printFormattedStringWithColorAndDelay("\n%s\n",CYN,REGU,MED, questDescription);
+            printStory("\nQuest description : ",UCYN,MED);
+            printFormattedStringWithColorAndDelay("\n%s\n",CYN,MED, questDescription);
             free(questDescription);
 
             // PRINT THE QUEST REWARDS
 
-            printStory("\nQuest HINT : ",CYN,UNDL,MED);
+            printStory("\nQuest HINT : ",UCYN,MED);
             // Quest Location
             char *questLocation = getQuestLocation(NPCQuestID);
             if (questLocation != NULL)
             {
-                printFormattedStringWithColorAndDelay("\nYou must go to %s to complete this Quest\n",CYN,REGU,MED, questLocation);
+                printFormattedStringWithColorAndDelay("\nYou must go to %s to complete this Quest\n",CYN,MED, questLocation);
                 free(questLocation);
             }
 
             // Get input to accept or reject
-            printStory("\nEnter (1) to accept this quest right now\nEnter (0) to reject this quest for now",YEL,REGU,LOW);
-            printStory("\n\nEnter your choice :",YEL,REGU,LOW);
+            printStory("\nEnter (1) to accept this quest right now\nEnter (0) to reject this quest for now",YEL,LOW);
+            printStory("\n\nEnter your choice :",YEL,LOW);
             int questinput;
             scanf("%d", &questinput);
 
@@ -1396,12 +1408,12 @@ void interactWith(Player *player, char *npc) // Requires Quest Submission
             if (questinput == 1)
             {
                 activateQuest(player, npc, NPCQuestID);
-                printStory("\nQuest Accepted!\n",YEL,REGU,MED);
+                printStory("\nQuest Accepted!\n",YEL,MED);
             }
         }
         else
         {
-            printFormattedStringWithColorAndDelay("\nYou have been ignored by %s\n",RED,BOLD, MED,npc);
+            printFormattedStringWithColorAndDelay("\nYou have been ignored by %s\n",BRED, MED,npc);
         }
     }
 }
@@ -1414,18 +1426,18 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
 
     // printf("Available NPCs:\n");
     if(!NPCsAvailable[0])
-        printStory("\nNo NPCs near you!\n",CYN,BOLD,MED);
+        printStory("\nNo NPCs near you!\n",BCYN,MED);
 
     for (i = 0; NPCsAvailable[i]; i++)
     {
-        printFormattedStringWithColorAndDelay("\nEnter (%d) to interact with %s",CYN,REGU,LOW, i + 1, NPCsAvailable[i]);
+        printFormattedStringWithColorAndDelay("\nEnter (%d) to interact with %s",CYN,LOW, i + 1, NPCsAvailable[i]);
     }
 
     // printf("\nOr Enter (n/N) for Navigation Mode");
     // printf("\nEnter (q/Q) for Quest Mode");
     // printf("\nEnter (e/E) to Exit the Game\n");
     printf("\n");
-    printStory("\nEnter Your choice (You may have to input Twice): ",YEL,REGU,LOW);
+    printStory("\nEnter Your choice (You may have to input Twice): ",YEL,LOW);
     
     // getchar();
     flushInputBuffer();
@@ -1490,9 +1502,9 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
     }
     else
     {
-        printStory("\nYou Have Interacted with some wrong individuals.",YEL,BOLD,MED);
-        printStory("\nYou Were Beaten to Death. Hope you be careful next time",RED,BOLD,MED);
-        *state=-1;
+        printStory("\nYou Have Interacted with some wrong individuals.",BYEL,MED);
+        printStory("\nYou Were Beaten to Death. Hope you be careful next time",BRED,MED);
+        gameLost(player,state);
         return;
     }
 }
@@ -1597,7 +1609,7 @@ void equipItem(Player *player, int index)
     cJSON *root = cJSON_Parse(fileContent);
     if (root == NULL)
     {
-        printStory("Error parsing JSON data.\n",WHT,REGU,HIG);
+        printStory("Error parsing JSON data.\n",WHT,HIG);
         free(fileContent);
         return;
     }
@@ -1625,7 +1637,7 @@ void equipItem(Player *player, int index)
 
     player->inventory->activeItems[index] = 1;
 
-    printStory("\nItem Has been Equiped!",YEL,REGU,MED);
+    printStory("\nItem Has been Equiped!",YEL,MED);
 }
 
 void unequipItem(Player *player, int index)
@@ -1663,7 +1675,7 @@ void unequipItem(Player *player, int index)
     cJSON *root = cJSON_Parse(fileContent);
     if (root == NULL)
     {
-        printStory("Error parsing JSON data.\n",WHT,REGU,HIG);
+        printStory("Error parsing JSON data.\n",WHT,HIG);
         free(fileContent);
         return;
     }
@@ -1690,7 +1702,7 @@ void unequipItem(Player *player, int index)
     }
 
     player->inventory->activeItems[index] = 0;
-    printStory("\nItem Has been Unequiped!",YEL,REGU,MED);
+    printStory("\nItem Has been Unequiped!",YEL,MED);
 }
 
 // Function to find the last location node in the currentLocation array of Player
@@ -1720,11 +1732,11 @@ void questMode(Player *player, int *state)
 
     printf("\n"); // Heading
     for (i = 0; player->inventory->items[i]; i++)
-        printFormattedStringWithColorAndDelay("\nEnter (%d) to select Item => %s",MAG,REGU,LOW, i + 1, player->inventory->items[i]);
+        printFormattedStringWithColorAndDelay("\nEnter (%d) to select Item => %s",MAG,LOW, i + 1, player->inventory->items[i]);
 
-    printStory("\nOr Enter (s/S) to Skip",YEL,REGU,MED);
+    printStory("\nOr Enter (s/S) to Skip",YEL,MED);
     printf("\n");
-    printStory("\nEnter your choice : ",YEL,REGU,LOW);
+    printStory("\nEnter your choice : ",YEL,LOW);
     input = getc(stdin);
     flushInputBuffer();
 
@@ -1751,8 +1763,8 @@ void questMode(Player *player, int *state)
         if (player->inventory->activeItems[input - '1'])
         {
             char toUnequip;
-            printStory("\nItem Already Equiped.",MAG,REGU,LOW);
-            printStory("\nDo you want to Unequip it (Y/N) :",MAG,REGU,MED);
+            printStory("\nItem Already Equiped.",MAG,LOW);
+            printStory("\nDo you want to Unequip it (Y/N) :",MAG,MED);
             // getchar();
             toUnequip = getc(stdin);
             flushInputBuffer();
@@ -1763,8 +1775,8 @@ void questMode(Player *player, int *state)
         else
         {
             char toEquip;
-            printStory("\nItem is NOT Equiped.",MAG,REGU,LOW);
-            printStory("\nDo you want to Equip it (Y/N) :",MAG,REGU,MED);
+            printStory("\nItem is NOT Equiped.",MAG,LOW);
+            printStory("\nDo you want to Equip it (Y/N) :",MAG,MED);
             // getchar();
             toEquip = getc(stdin);
             flushInputBuffer();
@@ -1846,20 +1858,20 @@ void questMode(Player *player, int *state)
     {
         // printf("\n%d",choises[j]);
         cJSON *quest = cJSON_GetArrayItem(questsArray, choises[j]);
-        printFormattedStringWithColorAndDelay("\nEnter (%d) to start quest=> %s",MAG,REGU,LOW, j + 1, cJSON_GetObjectItem(quest, "name")->valuestring);
+        printFormattedStringWithColorAndDelay("\nEnter (%d) to start quest=> %s",MAG,LOW, j + 1, cJSON_GetObjectItem(quest, "name")->valuestring);
     }
 
     if (choises[0] == -1)
     {
-        printStory("\nNo Active quest at this location",MAG,REGU,MED);
-        printStory("\nExplore More!",MAG,BOLD,MED);
+        printStory("\nNo Active quest at this location",MAG,MED);
+        printStory("\nExplore More!",BMAG,MED);
     }
 
     // printf("\nOr Enter (i/I) for Interaction Mode");
     // printf("\nEnter (n/N) for Navigation Mode");
     // printf("\nEnter (e/E) to Exit the Game");
 
-    printStory("\nEnter your choice : ",YEL,REGU,LOW);
+    printStory("\nEnter your choice : ",YEL,LOW);
     input = getc(stdin);
     // getchar();
     flushInputBuffer();
@@ -1920,9 +1932,9 @@ void questMode(Player *player, int *state)
         if (result)
         {
             char *questId = cJSON_GetObjectItem(child, "QuestID")->valuestring;
-            printf("%s - questid\n", questId);
+            // printf("%s - questid\n", questId);
             int npcId = questId[0] - '0';
-            printf("%d = npcid\n", npcId);
+            // printf("%d = npcid\n", npcId);
             player->NPCInfo[npcId][QUEST_STATUS] = 2;
             for (int i = 0; player->activeQuests[i]; i++)
             {
@@ -1939,20 +1951,17 @@ void questMode(Player *player, int *state)
         }
         else
         {
-            printf("\n"); // Print Game OVER STATEMENT and items lost and gold 0
-            player->currentLocation = strdup("WORLD/CITY");
-            player->gold = 0;
-            player->xp = 0;
-            player->inventory->items[1] = NULL;
-            player->inventory->activeItems[0] = 0;
-            player->inventory->activeItems[1] = -1;
+            printStory("You Lost the game and DIED",BRED,HIG); // Print Game OVER STATEMENT and items lost and gold 0
+            gameLost(player,state);
+            return;
         }
     }
     else
     {
-        printStory("\nYou started an Unknown Dangerous Task! ",YEL,BOLD,MED);
-        printStory("\nYou met a Hoard of Barbarian and DIED. Hope you be careful next time.",RED,BOLD,MED);
-        *state=-1;
+        printStory("\nYou started an Unknown Dangerous Task! ",BYEL,MED);
+        printStory("\nYou met a Hoard of Barbarian and DIED. Hope you be careful next time.",BRED,MED);
+        gameLost(player,state);
+        // printf("%d",*state);
         return;
     }
 }
