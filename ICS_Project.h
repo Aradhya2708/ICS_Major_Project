@@ -218,7 +218,7 @@ typedef enum
 {
     QUEST_LVL,
     QUEST_STATUS,
-    RELATONSHIP,
+    RELATIONSHIP,
 }QuestManager;
 
 typedef struct

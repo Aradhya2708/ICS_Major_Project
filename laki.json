@@ -5,12 +5,12 @@
 		"level":	1,
 		"wtdLevel":	0,
 		"xp":	0,
-		"gold":	50,
+		"gold":	0,
 		"currentLocation":	"WORLD/CITY",
 		"stats":	{
-			"hp":	100,
+			"hp":	120,
 			"atk":	10,
-			"def":	5,
+			"def":	8,
 			"agi":	8,
 			"str":	12,
 			"dex":	9,
@@ -37,7 +37,7 @@
 			}, {
 				"npc_id":	2,
 				"quest_lvl":	0,
-				"quest_status":	0,
+				"quest_status":	1,
 				"relationship":	0
 			}, {
 				"npc_id":	3,
@@ -61,9 +61,9 @@
 				"relationship":	0
 			}, {
 				"npc_id":	7,
-				"quest_lvl":	0,
-				"quest_status":	0,
-				"relationship":	0
+				"quest_lvl":	1413825874,
+				"quest_status":	1380272128,
+				"relationship":	1229734210
 			}, {
 				"npc_id":	8,
 				"quest_lvl":	0,
@@ -130,6 +130,8 @@
 				"quest_status":	0,
 				"relationship":	0
 			}],
-		"activeQuests":	[]
+		"activeQuests":	[{
+				"QuestID":	"2_0"
+			}]
 	}
 }
