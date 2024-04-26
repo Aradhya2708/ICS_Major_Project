@@ -218,7 +218,7 @@ typedef enum
 {
     QUEST_LVL,
     QUEST_STATUS,
-    RELATONSHIP,
+    RELATIONSHIP,
 }QuestManager;
 
 typedef struct
@@ -331,6 +331,10 @@ Player *loadPlayerData(char *playerID);
 int playMinigame(Player *player,char *gameName);
 
 void freePlayer(Player *player);
+
+void showPlayerInventory(Player *player);
+
+void showPlayerStats(Player *player);
 
 
 //From characters.h
