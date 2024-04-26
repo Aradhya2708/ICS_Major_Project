@@ -315,6 +315,7 @@ void selectState(int *state);
 
 void processState(Player *player,int *state);
 
+char *createFileName( char *name);
 
 
 

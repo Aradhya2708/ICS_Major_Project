@@ -24,7 +24,7 @@ int getNpcNumber() // This works checked
     FILE *file = fopen("characters.json", "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Failed to open file for reading\n");
+        fprintf(stderr, "Failed to open file characters.json for reading\n");
         return -1;
     }
 
@@ -135,87 +135,108 @@ int playMiniGame(Player *player, char *gameName)
     printf("\n");
 }
 
-Player *createNewPlayer(char *playerID) // This works checked
+Player *createNewPlayer(char *playerID)
 {
+    // printf("Creating new player...\n");
+
+    // Allocate memory for the player struct
     Player *newPlayer = (Player *)malloc(sizeof(Player));
     if (newPlayer == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Memory allocation failed for Player\n");
         exit(EXIT_FAILURE);
     }
+    // printf("Allocated memory for player struct.\n");
 
-    newPlayer->id = (char *)malloc(MAX_PLAYER_ID_LENGTH);
+    // Initialize player ID
+    newPlayer->id = strdup(playerID);
     if (newPlayer->id == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Memory allocation failed for ID\n");
         exit(EXIT_FAILURE);
     }
+    // printf("Initialized player ID: %s\n", newPlayer->id);
 
-    newPlayer->name = (char *)malloc(25);
+    // Initialize player name
+    newPlayer->name = strdup("Gaius Marcus Agrippa");
     if (newPlayer->name == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Memory allocation failed for name\n");
         exit(EXIT_FAILURE);
     }
+    // printf("Initialized player name: %s\n", newPlayer->name);
 
+    // Allocate memory for player stats
     newPlayer->stats = (Stats *)malloc(sizeof(Stats));
     if (newPlayer->stats == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Memory allocation failed for stats\n");
         exit(EXIT_FAILURE);
     }
+    // printf("Allocated memory for player stats.\n");
 
+    // Initialize player inventory
     newPlayer->inventory = (Inventory *)malloc(sizeof(Inventory));
     if (newPlayer->inventory == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Memory allocation failed for inventory\n");
         exit(EXIT_FAILURE);
     }
-    newPlayer->inventory->items = (char **)malloc(sizeof(char *) * 11); // initially only one string which will be NULL
-    if (newPlayer->inventory->items == NULL)
-    {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
-    newPlayer->inventory->activeItems = (int *)calloc(sizeof(int), 11); // Equal to items and has 0/1/-1 value(equiped or not or null)
-    if (newPlayer->inventory->items == NULL)
-    {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
+    // printf("Allocated memory for player inventory.\n");
 
-    newPlayer->currentLocation = (char *)malloc(sizeof(char) * 100);
+    // Allocate memory for inventory items and active items
+    newPlayer->inventory->items = (char **)malloc(11*sizeof(char *));
+    newPlayer->inventory->activeItems = (int *)malloc(11*sizeof(int));
+    if (newPlayer->inventory->items == NULL || newPlayer->inventory->activeItems == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed for inventory items or active items\n");
+        exit(EXIT_FAILURE);
+    }
+    // printf("Allocated memory for inventory items and active items.\n");
+
+    // Initialize current location
+    newPlayer->currentLocation = strdup("WORLD/CITY");
     if (newPlayer->currentLocation == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Memory allocation failed for current location\n");
         exit(EXIT_FAILURE);
     }
+    // printf("Initialized current location: %s\n", newPlayer->currentLocation);
 
-    newPlayer->activeQuests = (char **)malloc(sizeof(char *)); // initially only one string which will be NULL
-    if (newPlayer->inventory->items == NULL)
+    // Allocate memory for active quests
+    newPlayer->activeQuests = (char **)malloc(sizeof(char *));
+    if (newPlayer->activeQuests == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Memory allocation failed for active quests\n");
         exit(EXIT_FAILURE);
     }
+    // printf("Allocated memory for active quests.\n");
 
-    int numOfNpcs = getNpcNumber(); // reading chharcters.json for no of npcs
+    // Get the number of NPCs
+    int numOfNpcs = getNpcNumber();
 
+    // Allocate memory for NPC info
     newPlayer->NPCInfo = (int **)malloc(sizeof(int *) * numOfNpcs);
     if (newPlayer->NPCInfo == NULL)
     {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "Memory allocation failed for NPC info\n");
         exit(EXIT_FAILURE);
     }
     for (int i = 0; i < numOfNpcs; i++)
     {
-        newPlayer->NPCInfo[i] = (int *)calloc(sizeof(int), 3);
+        newPlayer->NPCInfo[i] = (int *)calloc(3, sizeof(int));
+        if (newPlayer->NPCInfo[i] == NULL)
+        {
+            fprintf(stderr, "Memory allocation failed for NPC info\n");
+            exit(EXIT_FAILURE);
+        }
     }
+    // printf("Allocated memory for NPC info.\n");
 
     // Initialize player properties
-    strcpy(newPlayer->id, playerID);
-    strcpy(newPlayer->name, "Gaius Marcus Agrippa");
     newPlayer->level = 1;
 
+    // Initialize player stats
     newPlayer->stats->HP = 100;
     newPlayer->stats->atk = 10;
     newPlayer->stats->def = 5;
@@ -224,28 +245,28 @@ Player *createNewPlayer(char *playerID) // This works checked
     newPlayer->stats->dex = 9;
     newPlayer->stats->intel = 6;
     newPlayer->stats->luck = 7;
+    // printf("Initialized player properties and stats.\n");
 
+    // Initialize player inventory size and items
     newPlayer->inventory->size = 10;
-    strcpy(newPlayer->inventory->items[0], "Gladiator's Sword");
+    newPlayer->inventory->items[0]=strdup("Gladiator's Sword");
     newPlayer->inventory->items[1] = NULL;
     newPlayer->inventory->activeItems[0] = 0;  // not equiped
     newPlayer->inventory->activeItems[1] = -1; // NULL
-    // Initialize inventory items as needed
-    // For simplicity, let's leave them empty for now
 
+    // printf("Initialized player inventory.\n");
+
+    // Initialize other player properties
     newPlayer->wtdLevel = 0;
     newPlayer->xp = 0;
     newPlayer->gold = 50;
+    // printf("Initialized other player properties.\n");
 
-    strcpy(newPlayer->currentLocation, "WORLD/CITY");
-    // char *token=strtok("WORLD/CITY","/");
-    // for(int i=0;token!=NULL;i++)
-    // {
-    //     newPlayer->currentLocation[i]=token;
-    //     token=strtok(NULL,"/");
-    // }
-
+    // Initialize active quests
     newPlayer->activeQuests[0] = NULL;
+    // printf("Initialized active quests.\n");
+
+    // printf("Player creation successful.\n");
 
     return newPlayer;
 }
@@ -330,17 +351,89 @@ void savePlayerData(Player *player) // This works checked
     cJSON_Delete(root);
 }
 
-void freePlayer(Player *player){}
-
-Player *loadPlayerData(char *playerID) // This works checked
+void freePlayer(Player *player)
 {
-    int i;
-    char *fileName = strdup(playerID);
-    strcat(fileName, ".json");
+    if (player == NULL) {
+        return; // Nothing to free if player is NULL
+    }
+
+    // Free dynamically allocated members
+    free(player->id);
+    free(player->name);
+    free(player->currentLocation);
+
+    // Free Stats structure
+    free(player->stats);
+
+    // Free Inventory structure
+    if (player->inventory != NULL) 
+    {
+        // Free items in inventory
+        for (int i = 0; i < player->inventory->size; i++)
+        {
+            free(player->inventory->items[i]);
+        }
+        free(player->inventory->items);
+        free(player->inventory->activeItems);
+        free(player->inventory);
+    }
+
+    int n=getNpcNumber();
+    // Free NPCInfo array
+    if (player->NPCInfo != NULL) 
+    {
+        for (int i = 0; i<n; i++) 
+        {
+            free(player->NPCInfo[i]);
+        }
+        free(player->NPCInfo);
+    }
+
+    // Free activeQuests array
+    if (player->activeQuests != NULL) 
+    {
+        for (int i = 0; player->activeQuests[i] != NULL; i++) 
+        {
+            free(player->activeQuests[i]);
+        }
+        free(player->activeQuests);
+    }
+
+    // Free the player structure itself
+    free(player);
+}
+
+char *createFileName( char *name) {
+    // Define a constant extension
+    const char *extension = ".json";
+
+    // Calculate the length of the name and extension
+    size_t nameLength = strlen(name);
+    size_t extensionLength = strlen(extension);
+
+    // Allocate memory for the filename
+    char *fileName = (char *)malloc(nameLength + extensionLength + 1); // +1 for the null terminator
+    if (fileName == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Copy the name to the filename buffer
+    strcpy(fileName, name);
+
+    // Concatenate the extension to the filename
+    strcat(fileName, extension);
+
+    return fileName;
+}
+
+
+Player *loadPlayerData(char *playerID) 
+{
+    char *fileName = createFileName(playerID);
     // printf("%s", fileName);
     FILE *file = fopen(fileName, "r");
-    if (file == NULL)
-    {
+    if (file == NULL) {
         fprintf(stderr, "Failed to open file for reading\n");
         return NULL;
     }
@@ -348,23 +441,27 @@ Player *loadPlayerData(char *playerID) // This works checked
     fseek(file, 0, SEEK_END);
     long fileSize = ftell(file);
     fseek(file, 0, SEEK_SET);
+    // printf("\nhi");
 
     char *fileContent = (char *)malloc(fileSize + 1);
-    if (fileContent == NULL)
-    {
+    if (fileContent == NULL) {
         fprintf(stderr, "Memory allocation failed for file content\n");
         fclose(file);
         return NULL;
     }
+    // printf("\nhi");
 
     fread(fileContent, 1, fileSize, file);
     fclose(file);
-    fileContent[fileSize] = 0;
+    fileContent[fileSize] = '\0';
+    // printf("\nhi");
 
     cJSON *root = cJSON_Parse(fileContent);
     cJSON *playerObject = cJSON_GetObjectItem(root, "player");
+    // printf("\nhi");
 
-    Player *player = createNewPlayer(playerID);
+    Player *player = createNewPlayer(playerID); // Create a new player structure
+    // printf("\nhi");
 
     // Load player properties from JSON object
     strcpy(player->id, cJSON_GetObjectItem(playerObject, "id")->valuestring);
@@ -391,11 +488,9 @@ Player *loadPlayerData(char *playerID) // This works checked
     cJSON *itemsArray = cJSON_GetObjectItem(inventoryObject, "items");
 
     cJSON *item = NULL;
-    i = 0;
-    cJSON_ArrayForEach(item, itemsArray)
-    {
-        player->inventory->items[i] = (char *)malloc(50);
-        strcpy(player->inventory->items[i], cJSON_GetObjectItem(item, "item")->valuestring);
+    int i = 0;
+    cJSON_ArrayForEach(item, itemsArray) {
+        player->inventory->items[i] = strdup(cJSON_GetObjectItem(item, "item")->valuestring);
         player->inventory->activeItems[i] = cJSON_GetObjectItem(item, "isEquiped")->valueint;
         i++;
     }
@@ -405,8 +500,7 @@ Player *loadPlayerData(char *playerID) // This works checked
 
     cJSON *npc = NULL;
     i = 0;
-    cJSON_ArrayForEach(npc, npcsArray)
-    {
+    cJSON_ArrayForEach(npc, npcsArray) {
         player->NPCInfo[i][QUEST_LVL] = cJSON_GetObjectItem(npc, "quest_lvl")->valueint;
         player->NPCInfo[i][QUEST_STATUS] = cJSON_GetObjectItem(npc, "quest_status")->valueint;
         player->NPCInfo[i][RELATONSHIP] = cJSON_GetObjectItem(npc, "relationship")->valueint;
@@ -418,15 +512,15 @@ Player *loadPlayerData(char *playerID) // This works checked
     i = 0;
     int n = cJSON_GetArraySize(activeQuestArray);
     player->activeQuests = (char **)malloc(sizeof(char *) * (n + 1));
-    cJSON_ArrayForEach(quest, activeQuestArray)
-    {
-        player->activeQuests[i] = (char *)malloc(10);
+    cJSON_ArrayForEach(quest, activeQuestArray) {
         player->activeQuests[i] = strdup(cJSON_GetObjectItem(quest, "QuestID")->valuestring);
         i++;
     }
+    player->activeQuests[i] = NULL;
 
     cJSON_Delete(root);
     free(fileContent);
+    printf("\nplayer data loaded successfully.");
     return player;
 }
 
@@ -439,10 +533,10 @@ Player *gameInitializer(char *PlayerID) // This works checked
     // It also makes a new json file or load json files based on
     // player choise and returns a player variable
     int input;
-    Player *player;
+    Player *player=NULL;
 
     printStory("\nEnter (1) to Start a New Game",YEL,20);
-    // printStory("\nEnter (2) Load an Old Game",yel,20);
+    printStory("\nEnter (2) Load an Old Game",YEL,20);
     printStory("\nEnter a Choice : ",YEL,20);
     scanf("%d", &input);
 
@@ -455,13 +549,15 @@ Player *gameInitializer(char *PlayerID) // This works checked
     }
     else if (input == 2)
     {
-        printStory("The Load Functionality is currently unavailable",RED,100);
-        return NULL;
+        // printf("into load if");
+        // printStory("The Load Functionality is currently unavailable",31,0,100);
+        // return NULL;
         // Load an old game
         player = loadPlayerData(PlayerID);
         if (player == NULL)
         {
             printf("No saved game found. Starting a new game...\n");
+            // printf("Invalid choice. Starting a new game...\n");
             player = createNewPlayer(PlayerID);
             savePlayerData(player);
         }
@@ -1329,6 +1425,9 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
     char input;
 
     // printf("Available NPCs:\n");
+    if(!NPCsAvailable[0])
+        printStory("\nNo NPCs near you!\n",BCYN,MED);
+
     for (i = 0; NPCsAvailable[i]; i++)
     {
         printFormattedStringWithColorAndDelay("\nEnter (%d) to interact with %s",CYN,LOW, i + 1, NPCsAvailable[i]);
