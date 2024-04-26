@@ -52,6 +52,10 @@ int main()
     // printf("\nnpcInfo[0][0]-%d",player->NPCInfo[0][0]);
 //     printPrologue();
 
+    char *rules = "\n1. Switch between the realms of navigation (n), questing (q), and interaction (i), each representing a facet of Marcus's journey through tragedy and redemption.\nOffered as a fleeting respite from the harsh realities of Marcus's world, the option to exit serves as a reminder of the impossibility of escape from one's past.\n2. Engage with characters who embody the trials and tribulations of Marcus's existence, delving into the depths of human suffering and forging connections in a world haunted by tragedy.\n3. Undertake quests as allegories for Marcus's struggles, confronting demons both internal and external as he seeks redemption in the face of overwhelming adversity.\n4. Exercise caution in choices, as wrong steps may lead to ruin, plunging Marcus deeper into despair in a world where redemption is but a fleeting dream.\n5. Collect items as tangible reminders of Marcus's journey, each possessing a story and a shard of hope amidst the darkness.\n6. Navigate moral dilemmas that test Marcus's resolve, each decision shaping his path towards salvation or damnation in a world on the brink of collapse.\n7. Be mindful of the ripple effect of choices, as every action leaves an indelible mark upon the fabric of reality, determining Marcus's fate in a world overshadowed by tragedy.";
+    printStory("\nRules:", BHRED, HIG);
+    printStory(rules, HBLU, 10);
+    printf("\n");
     selectState(&state); // function that can be called from anywhere by player to choose a state
     while (state >= 0)
         processState(player, &state); // function that processes the state

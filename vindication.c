@@ -1926,7 +1926,7 @@ void questMode(Player *player, int *state)
         // printf("game = %s", cJSON_GetObjectItem(child, "Minigame")->valuestring);
         flushInputBuffer();
         int result = playMiniGame(player, cJSON_GetObjectItem(child, "Minigame")->valuestring); // in player.c
-        printf("%d = Result\n", result);
+        // printf("%d = Result\n", result);
         flushInputBuffer();
         printf("\e[1;1H\e[2J");
         if (result)
@@ -1940,7 +1940,7 @@ void questMode(Player *player, int *state)
             {
                 if (strcmp(player->activeQuests[i], questId) == 0)
                 {
-                    printf("%d = i\n", i);
+                    // printf("%d = i\n", i);
                     for (int j = i; player->activeQuests[j]; j++)
                     {
                         player->activeQuests[j] = player->activeQuests[j + 1];
