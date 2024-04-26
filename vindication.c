@@ -12,7 +12,7 @@ int getNpcNumber() // This works checked
     FILE *file = fopen("characters.json", "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Failed to open file for reading\n");
+        fprintf(stderr, "Failed to open file characters.json for reading\n");
         return -1;
     }
 
@@ -318,18 +318,72 @@ void savePlayerData(Player *player) // This works checked
     cJSON_Delete(root);
 }
 
-void freePlayer(Player *player){}
+void freePlayer(Player *player)
+{
+    if (player == NULL) {
+        return; // Nothing to free if player is NULL
+    }
 
-Player *loadPlayerData(char *playerID) // This works checked
+    // Free dynamically allocated members
+    free(player->id);
+    free(player->name);
+    free(player->currentLocation);
+
+    // Free Stats structure
+    free(player->stats);
+
+    // Free Inventory structure
+    if (player->inventory != NULL) 
+    {
+        // Free items in inventory
+        for (int i = 0; i < player->inventory->size; i++)
+        {
+            free(player->inventory->items[i]);
+        }
+        free(player->inventory->items);
+        free(player->inventory->activeItems);
+        free(player->inventory);
+    }
+
+    int n=getNpcNumber();
+    // Free NPCInfo array
+    if (player->NPCInfo != NULL) 
+    {
+        for (int i = 0; i<n; i++) 
+        {
+            free(player->NPCInfo[i]);
+        }
+        free(player->NPCInfo);
+    }
+
+    // Free activeQuests array
+    if (player->activeQuests != NULL) 
+    {
+        for (int i = 0; player->activeQuests[i] != NULL; i++) 
+        {
+            free(player->activeQuests[i]);
+        }
+        free(player->activeQuests);
+    }
+
+    // Free the player structure itself
+    free(player);
+}
+
+Player *loadPlayerData(char *playerID) 
 {
     int i;
     char *fileName = strdup(playerID);
     strcat(fileName, ".json");
-    // printf("%s", fileName);
-    FILE *file = fopen(fileName, "r");
+    printf("%s", fileName);
+    FILE *file = fopen("items.json", "r+");
+    if(file){
+        printf("yeah..");
+        return NULL;
+    }
     if (file == NULL)
     {
-        fprintf(stderr, "Failed to open file for reading\n");
+        fprintf(stderr, "Failed to open file for reading the player json\n");
         return NULL;
     }
 
@@ -427,10 +481,10 @@ Player *gameInitializer(char *PlayerID) // This works checked
     // It also makes a new json file or load json files based on
     // player choise and returns a player variable
     int input;
-    Player *player;
+    Player *player=NULL;
 
     printStory("\nEnter (1) to Start a New Game",33,0,20);
-    // printStory("\nEnter (2) Load an Old Game",33,0,20);
+    printStory("\nEnter (2) Load an Old Game",33,0,20);
     printStory("\nEnter a Choice : ",33,0,20);
     scanf("%d", &input);
 
@@ -443,13 +497,15 @@ Player *gameInitializer(char *PlayerID) // This works checked
     }
     else if (input == 2)
     {
-        printStory("The Load Functionality is currently unavailable",31,0,100);
-        return NULL;
+        // printf("into load if");
+        // printStory("The Load Functionality is currently unavailable",31,0,100);
+        // return NULL;
         // Load an old game
         player = loadPlayerData(PlayerID);
         if (player == NULL)
         {
             printf("No saved game found. Starting a new game...\n");
+            // printf("Invalid choice. Starting a new game...\n");
             player = createNewPlayer(PlayerID);
             savePlayerData(player);
         }
@@ -1317,6 +1373,9 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
     char input;
 
     // printf("Available NPCs:\n");
+    if(!NPCsAvailable[0])
+        printStory("\nNo NPCs near you!\n",CYN,BOLD,MED);
+
     for (i = 0; NPCsAvailable[i]; i++)
     {
         printFormattedStringWithColorAndDelay("\nEnter (%d) to interact with %s",CYN,REGU,LOW, i + 1, NPCsAvailable[i]);
