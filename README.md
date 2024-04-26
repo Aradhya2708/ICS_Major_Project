@@ -27,7 +27,7 @@
 ## Usage
 To compile "The Vindication," use the following command:
 ```
-gcc -o Vindication vindication.c main.c cJSON.c
+gcc -o Vindication vindication.c main.c cJSON.c minigames.c
 ```
 then run the executable 
 ```
