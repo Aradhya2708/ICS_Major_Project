@@ -303,6 +303,8 @@ int Combat();
 
 void delay2(int milliseconds);
 
+void flushInputBuffer();
+
 void gameLost(Player *player,int *state);
 
 void printStory(const char *sentence,char *textStyle,int time);

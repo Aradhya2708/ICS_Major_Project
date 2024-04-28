@@ -1,16 +1,16 @@
 {
 	"player":	{
-		"id":	"aradhya",
+		"id":	"laki",
 		"name":	"Gaius Marcus Agrippa",
 		"level":	1,
 		"wtdLevel":	0,
 		"xp":	0,
-		"gold":	50,
-		"currentLocation":	"WORLD/CITY",
+		"gold":	0,
+		"currentLocation":	"WORLD/CITY/COMMERCIAL_STREET/ALCHEMIST_SHOP",
 		"stats":	{
-			"hp":	100,
+			"hp":	120,
 			"atk":	10,
-			"def":	5,
+			"def":	8,
 			"agi":	8,
 			"str":	12,
 			"dex":	9,
@@ -32,12 +32,12 @@
 			}, {
 				"npc_id":	1,
 				"quest_lvl":	0,
-				"quest_status":	0,
+				"quest_status":	1,
 				"relationship":	0
 			}, {
 				"npc_id":	2,
 				"quest_lvl":	0,
-				"quest_status":	0,
+				"quest_status":	1,
 				"relationship":	0
 			}, {
 				"npc_id":	3,
@@ -47,7 +47,7 @@
 			}, {
 				"npc_id":	4,
 				"quest_lvl":	0,
-				"quest_status":	0,
+				"quest_status":	2,
 				"relationship":	0
 			}, {
 				"npc_id":	5,
@@ -130,6 +130,10 @@
 				"quest_status":	0,
 				"relationship":	0
 			}],
-		"activeQuests":	[]
+		"activeQuests":	[{
+				"QuestID":	"2_0"
+			}, {
+				"QuestID":	"1_0"
+			}]
 	}
 }
