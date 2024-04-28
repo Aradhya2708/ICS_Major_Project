@@ -303,6 +303,8 @@ int Combat();
 
 void delay2(int milliseconds);
 
+void flushInputBuffer();
+
 void gameLost(Player *player,int *state);
 
 void printStory(const char *sentence,char *textStyle,int time);
@@ -311,7 +313,7 @@ void printFormattedStringWithColorAndDelay(const char *format, char *textStyle, 
 
 Player* gameInitializer(char *PlayerID);
 
-void selectState(int *state);
+void selectState(Player *player,int *state);
 
 void processState(Player *player,int *state);
 

@@ -2,8 +2,13 @@
 // #include"cJSON.c"
 
 void flushInputBuffer() {
+    char c;
     if (!feof(stdin) && !ferror(stdin)) {
-        while (getchar() != '\n' ); // Read and discard characters until newline or EOF
+        do
+        {
+            c=getchar();
+            // printf("\n%d",c); // Read and discard characters until newline or EOF
+        }while(c != '\n');
     }
 }
 
@@ -323,7 +328,7 @@ void savePlayerData(Player *player) // This works checked
         cJSON_AddNumberToObject(npc, "quest_lvl", player->NPCInfo[i][QUEST_LVL]);
         cJSON_AddNumberToObject(npc, "quest_status", player->NPCInfo[i][QUEST_STATUS]);
         cJSON_AddNumberToObject(npc, "relationship", player->NPCInfo[i][RELATIONSHIP]);
-        printf("\nNPC %d: quest_lvl=%d, quest_status=%d, relationship=%d\n", i, player->NPCInfo[i][QUEST_LVL], player->NPCInfo[i][QUEST_STATUS], player->NPCInfo[i][RELATIONSHIP]);
+        // printf("\nNPC %d: quest_lvl=%d, quest_status=%d, relationship=%d\n", i, player->NPCInfo[i][QUEST_LVL], player->NPCInfo[i][QUEST_STATUS], player->NPCInfo[i][RELATIONSHIP]);
 
     }
 
@@ -576,6 +581,7 @@ Player *gameInitializer(char *PlayerID) // This works checked
     printStory("\nEnter (2) Load an Old Game",YEL,20);
     printStory("\nEnter a Choice : ",YEL,20);
     scanf("%d", &input);
+    flushInputBuffer();
 
     if (input == 1)
     {
@@ -619,7 +625,7 @@ Player *gameInitializer(char *PlayerID) // This works checked
     return player;
 }
 
-void selectState(int *state) // This works checked
+void selectState(Player *player,int *state) // This works checked
 {
     char input;
     // printStory("\nEnter (n/N) to Choose  Navigation Mode",GRN,MED);
@@ -627,7 +633,7 @@ void selectState(int *state) // This works checked
     // printStory("\nEnter (q/Q) to Choose       Quest Mode",MAG,MED);
     printStory("\nChoose a Mode to continue your Journey (n/i/q) : ",YEL,LOW);
 
-    getchar();
+    // getchar();
     input=getc(stdin);
     flushInputBuffer();
 
@@ -641,6 +647,14 @@ void selectState(int *state) // This works checked
     else if(input=='i'||input=='I') *state=1;
     else if(input=='q'||input=='Q') *state=2;
     else if(input=='e'||input=='E') *state=-1;
+    else
+    if(input=='p'||input=='P')
+    {
+        showPlayerStats(player);
+        showPlayerInventory(player);
+        printStory("Default state set to Navigation",YEL,LOW);
+        return;         
+    }
     else    
     {
         printStory("\n\nLooks like you have stumbled and fell into Shadow. Hope you make it through the next time",BMAG,HIG);
@@ -738,7 +752,7 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
 
         printStory("\nEnter your choice : ",YEL,LOW);
         // getchar();
-        flushInputBuffer();
+        // flushInputBuffer();
         input = getc(stdin);
 
         flushInputBuffer();
@@ -779,6 +793,13 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
             return;
         }
 
+        if(input=='p'||input=='P')
+        {
+            showPlayerStats(player);
+            showPlayerInventory(player);
+            return;         
+        }
+
         if (input == 'i' || input == 'I')
         {
             *state = 1;
@@ -810,10 +831,8 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
         printf("\n");
         printStory("\nEnter your choice : ",YEL,LOW);
         // getchar();
-        flushInputBuffer();
-
+        // flushInputBuffer();
         input = getc(stdin);
-
         flushInputBuffer();
         // printf("\nc=%c",input);
 
@@ -851,6 +870,13 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
         {
             *state = -1;
             return;
+        }
+
+        if(input=='p'||input=='P')
+        {
+            showPlayerStats(player);
+            showPlayerInventory(player);
+            return;         
         }
 
         if (input == 'i' || input == 'I')
@@ -1447,7 +1473,7 @@ void interactWith(Player *player, char *npc) // Requires Quest Submission
             printStory("\n\nEnter your choice :",YEL,LOW);
             int questinput;
             scanf("%d", &questinput);
-
+            flushInputBuffer();
             // If accepted, add to active quests
             if (questinput == 1)
             {
@@ -1481,12 +1507,12 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
     // printf("\nEnter (q/Q) for Quest Mode");
     // printf("\nEnter (e/E) to Exit the Game\n");
     printf("\n");
-    printStory("\nEnter Your choice (You may have to input Twice): ",YEL,LOW);
+    printStory("\nEnter Your choice : ",YEL,LOW);
     
     // getchar();
-    flushInputBuffer();
-    input = getc(stdin);
     // flushInputBuffer();
+    input = getc(stdin);
+    flushInputBuffer();
     
     // printf("%c",input);
 
@@ -1537,6 +1563,13 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
     {
         *state = 2;
         return;
+    }
+    else
+    if(input=='p'||input=='P')
+    {
+        showPlayerStats(player);
+        showPlayerInventory(player);
+        return;         
     }
     else
     if(input>='1'&& input<=i+'1')
@@ -1790,6 +1823,13 @@ void questMode(Player *player, int *state)
         return;
     }
 
+    if(input=='p'||input=='P')
+    {
+        showPlayerStats(player);
+        showPlayerInventory(player);
+        return;         
+    }
+
     if (input == 'i' || input == 'I')
     {
         *state = 1;
@@ -1916,14 +1956,22 @@ void questMode(Player *player, int *state)
     // printf("\nEnter (e/E) to Exit the Game");
 
     printStory("\nEnter your choice : ",YEL,LOW);
-    input = getc(stdin);
     // getchar();
+    input = getc(stdin);
+    // printf("%c",input);
     flushInputBuffer();
 
     if (input == 'e' || input == 'E')
     {
         *state = -1;
         return;
+    }
+    else
+    if(input=='p'||input=='P')
+    {
+        showPlayerStats(player);
+        showPlayerInventory(player);
+        return;         
     }
     else
     if (input == 'i' || input == 'I')
@@ -1938,37 +1986,11 @@ void questMode(Player *player, int *state)
         return;
     }
     else
-    // while (input <= '0' || input > j + '0')
-    // {
-    //     if (input == 'e' || input == 'E')
-    //     {
-    //         *state = -1;
-    //         return;
-    //     }
-
-    //     if (input == 'i' || input == 'I')
-    //     {
-    //         *state = 1;
-    //         return;
-    //     }
-
-    //     if (input == 'n' || input == 'N')
-    //     {
-    //         *state = 0;
-    //         return;
-    //     }
-
-    //     printf("\nSuch a quest doesn't exist. Enter a Valid Choice!");
-    //     printf("\nEnter your choice : ");
-    //     getchar();
-    //     input = getc(stdin);
-    //     // flushInputBuffer();
-    // }
-    if(input>1 && input<=j+'0')
+    if(input>='1' && input<=j+'0')
     {
         cJSON *child = cJSON_GetArrayItem(questsArray, choises[input - '1']);
         // printf("game = %s", cJSON_GetObjectItem(child, "Minigame")->valuestring);
-        flushInputBuffer();
+        // flushInputBuffer();
         int result = playMiniGame(player, cJSON_GetObjectItem(child, "Minigame")->valuestring); // in player.c
         // printf("%d = Result\n", result);
         flushInputBuffer();
