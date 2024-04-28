@@ -328,7 +328,7 @@ void savePlayerData(Player *player) // This works checked
         cJSON_AddNumberToObject(npc, "quest_lvl", player->NPCInfo[i][QUEST_LVL]);
         cJSON_AddNumberToObject(npc, "quest_status", player->NPCInfo[i][QUEST_STATUS]);
         cJSON_AddNumberToObject(npc, "relationship", player->NPCInfo[i][RELATIONSHIP]);
-        printf("\nNPC %d: quest_lvl=%d, quest_status=%d, relationship=%d\n", i, player->NPCInfo[i][QUEST_LVL], player->NPCInfo[i][QUEST_STATUS], player->NPCInfo[i][RELATIONSHIP]);
+        // printf("\nNPC %d: quest_lvl=%d, quest_status=%d, relationship=%d\n", i, player->NPCInfo[i][QUEST_LVL], player->NPCInfo[i][QUEST_STATUS], player->NPCInfo[i][RELATIONSHIP]);
 
     }
 
@@ -625,7 +625,7 @@ Player *gameInitializer(char *PlayerID) // This works checked
     return player;
 }
 
-void selectState(int *state) // This works checked
+void selectState(Player *player,int *state) // This works checked
 {
     char input;
     // printStory("\nEnter (n/N) to Choose  Navigation Mode",GRN,MED);
@@ -647,6 +647,14 @@ void selectState(int *state) // This works checked
     else if(input=='i'||input=='I') *state=1;
     else if(input=='q'||input=='Q') *state=2;
     else if(input=='e'||input=='E') *state=-1;
+    else
+    if(input=='p'||input=='P')
+    {
+        showPlayerStats(player);
+        showPlayerInventory(player);
+        printStory("Default state set to Navigation",YEL,LOW);
+        return;         
+    }
     else    
     {
         printStory("\n\nLooks like you have stumbled and fell into Shadow. Hope you make it through the next time",BMAG,HIG);
@@ -785,6 +793,13 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
             return;
         }
 
+        if(input=='p'||input=='P')
+        {
+            showPlayerStats(player);
+            showPlayerInventory(player);
+            return;         
+        }
+
         if (input == 'i' || input == 'I')
         {
             *state = 1;
@@ -855,6 +870,13 @@ void navigationMode(Player *player, int *state) // This works checked BUT ADD SO
         {
             *state = -1;
             return;
+        }
+
+        if(input=='p'||input=='P')
+        {
+            showPlayerStats(player);
+            showPlayerInventory(player);
+            return;         
         }
 
         if (input == 'i' || input == 'I')
@@ -1485,7 +1507,7 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
     // printf("\nEnter (q/Q) for Quest Mode");
     // printf("\nEnter (e/E) to Exit the Game\n");
     printf("\n");
-    printStory("\nEnter Your choice (You may have to input Twice): ",YEL,LOW);
+    printStory("\nEnter Your choice : ",YEL,LOW);
     
     // getchar();
     // flushInputBuffer();
@@ -1541,6 +1563,13 @@ void chooseNPC(char **NPCsAvailable, Player *player, int *state)
     {
         *state = 2;
         return;
+    }
+    else
+    if(input=='p'||input=='P')
+    {
+        showPlayerStats(player);
+        showPlayerInventory(player);
+        return;         
     }
     else
     if(input>='1'&& input<=i+'1')
@@ -1794,6 +1823,13 @@ void questMode(Player *player, int *state)
         return;
     }
 
+    if(input=='p'||input=='P')
+    {
+        showPlayerStats(player);
+        showPlayerInventory(player);
+        return;         
+    }
+
     if (input == 'i' || input == 'I')
     {
         *state = 1;
@@ -1929,6 +1965,13 @@ void questMode(Player *player, int *state)
     {
         *state = -1;
         return;
+    }
+    else
+    if(input=='p'||input=='P')
+    {
+        showPlayerStats(player);
+        showPlayerInventory(player);
+        return;         
     }
     else
     if (input == 'i' || input == 'I')

@@ -313,7 +313,7 @@ void printFormattedStringWithColorAndDelay(const char *format, char *textStyle, 
 
 Player* gameInitializer(char *PlayerID);
 
-void selectState(int *state);
+void selectState(Player *player,int *state);
 
 void processState(Player *player,int *state);
 

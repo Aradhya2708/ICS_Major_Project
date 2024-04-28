@@ -36,6 +36,7 @@ int main()
     printStory("3. Engage with characters who embody the trials and tribulations of Marcus's existence, \ndelving into the depths of human suffering and forging connections in a world haunted by tragedy. \nNavigate through the intricate web of relationships and dilemmas, \neach interaction (i) a mirror reflecting Marcus's internal turmoil and external conflicts.\n\n", BHMAG, LOW);
     printStory("4. Undertake quests as allegories for Marcus's struggles, \nconfronting demons both internal and external as he seeks redemption in the face of overwhelming adversity. \nLet each quest be a stepping stone on Marcus's journey towards reconciliation and absolution, \na testament to the resilience of the human spirit amidst the darkest of trials.\n\n", BHMAG, LOW);
     printStory("5. In the protagonist's world, missteps and failed quests can lead to a grim end. \nWrong choices or unfulfilled quests may spell death, \nsending the protagonist back to the city with only their sword, and their XP and gold reset. \nBut even in death, redemption's spark remains, \noffering the protagonist a chance to rewrite their fate until they themselves choose to depart (e).\n\n",BHMAG,LOW);
+    printStory("6. Unveil the depths of your strength and the treasures of your inventory by invoking the letter 'p'. \nDelve into the essence of your character, \nwhere each item and attribute tells a story of your journey's trials and triumphs.\n\n",BHMAG,LOW);
     // printStory(rules, HYEL, 10);
 
     player = gameInitializer(playerID);
@@ -58,7 +59,7 @@ int main()
 //     printPrologue();
 
     printf("\n");
-    selectState(&state); // function that can be called from anywhere by player to choose a state
+    selectState(player,&state); // function that can be called from anywhere by player to choose a state
     while (state >= 0)
         processState(player, &state); // function that processes the state
 
