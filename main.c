@@ -24,6 +24,14 @@ int main()
     }
     flushInputBuffer();
 
+    if(strcmp(playerID,"items")==0||strcmp(playerID,"dialogue")==0||strcmp(playerID,"locations")==0||strcmp(playerID,"navigations")==0||strcmp(playerID,"characters")==0||strcmp(playerID,"quests")==0)
+    {
+        printStory("You have spoken with the venom of an EVIL tongue.",BRED,HIG);
+        printStory("\nTHE END",BRED,HIG); /// EXIT STATEMENT
+        printStory("\nThank you for playing ",BYEL,HIG); /// EXIT STATEMENT
+        printStory("THE VINDICATION",BHRED,HIG); /// EXIT STATEMENT
+        return 0;
+    }
     Player *player = NULL;
 
     // printRules();

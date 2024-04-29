@@ -91,9 +91,9 @@
 #define BHCYN "\e[1;96m"
 #define BHWHT "\e[1;97m"
 
-#define LOW 0
-#define MED 0
-#define HIG 0
+#define LOW 4
+#define MED 10
+#define HIG 20
 //Structures
 
 // Define the Inventory structure

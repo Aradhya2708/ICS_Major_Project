@@ -1332,6 +1332,8 @@ char *getQuestID(Player *player, char *npcName) // Test case 1 passed(A)
     {
         sprintf(questID, "%d_%d", npcID, questLevel);
     }
+        // printf("%s = Quest ID for NPC\n", questID);
+
     return questID;
 }
 
@@ -1419,7 +1421,6 @@ void interactWith(Player *player, char *npc) // Requires Quest Submission
     // printf("Debug 0 : %s\n", npc);
 
     char *NPCQuestID = getQuestID(player, npc);
-    // printf("%s = Quest ID for NPC\n", NPCQuestID);
 
     // // If any quest to submit:
     if (anyQuesttoSubmit(player, npc))
@@ -1439,6 +1440,7 @@ void interactWith(Player *player, char *npc) // Requires Quest Submission
     }
     else
     {
+        printf("%s = Quest ID for NPC\n", NPCQuestID);
         char *dialogues = questDialogues(NPCQuestID); // NPCQuestID instead of String
         if (dialogues != NULL)
         {
